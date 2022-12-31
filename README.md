@@ -68,3 +68,8 @@ iii.  Money plot: Cost distribution comparison between the 2 simulations.
 
 This code set uses 2 threads for simulations below 100000 trials for each simulation and 16 for above.  I may change it later to account for probability values and the number of trials.  A low probability value and a high number of trials are easily demanding and time-consuming to compute on just 2 parallel threads.
 
+### Default outputting 
+
+A simple plt.show() command is also outputted quickly showing a temporary but saveable joined output figure with the "tapdata" and "moneydata" plots.
+
+![printedoutput](https://user-images.githubusercontent.com/100022747/210150615-231c7e84-88e4-42d5-8720-ff8a76d28f12.PNG)
