@@ -73,3 +73,13 @@ This code set uses 2 threads for simulations below 100000 trials for each simula
 A simple plt.show() command is also outputted quickly showing a temporary but saveable joined output figure with the "tapdata" and "moneydata" plots.
 
 ![printedoutput](https://user-images.githubusercontent.com/100022747/210150615-231c7e84-88e4-42d5-8720-ff8a76d28f12.PNG)
+
+For the brave ones who made it this far, not that this is anything revolutionary, this sample of 1million sample for EACH simulation (for which there were 2) took less than 10min! To be precise, it took 482.0229332s to execute the arithmetic on Rust's part. This would have taken far longer in Python only rendition, which I used to use myself!
+
+### Scaling with increased iterations | Compared to Python
+
+
+![pythonvsrust](https://user-images.githubusercontent.com/100022747/210150718-e260d266-2f07-4172-92fb-56e049be79c4.png)
+
+Rust appears to at least be 1.6 times faster than Python in executing the simulations.  This timing dataset was for only 1 simulation at a time without any multi-threading on either side.
+
