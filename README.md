@@ -37,6 +37,9 @@ This trial simulator was initially constructed entirely on Python, with some bug
 
 Customtkinter enables the user to interact with the underlying code written in Rust.  
 
+![UI](https://user-images.githubusercontent.com/100022747/210150025-281e6746-ee7f-4cfe-8a3c-43724a13c8b3.png)
+
+
 ## Interaction between Python and Rust 
 The initializing GUI python file executes subprocess commands.  The output from Rust is conveniently pipelined to another recipient Python file instead of outputting potentially time-wasting data to another format.  In our case, CSV only sometimes reliably outputs data with over 50000 rows.  Nonetheless, the data was readable when we initially attempted it. 
 
@@ -46,9 +49,14 @@ The initializing GUI python file executes subprocess commands.  The output from 
 
 i.  Attempt plot: pair-wise comparison of histograms for the two simulations for the number of independent attempt sessions taken to achieve the success of all the trials.  Irrelevant for methods where %10 > 4.
 
+![plot2](https://user-images.githubusercontent.com/100022747/210150044-098da96e-571f-472d-8001-35c35c956ce4.png)
+
+
 ii.  Tapdata plot: pair-wise histogram comparing the number of successes every N individual trial attempts ("taps")
+![tapdataplot](https://user-images.githubusercontent.com/100022747/210150048-208b2cf1-1066-4cf7-80bd-de891dd89ed1.png)
 
 iii.  Money plot: Cost distribution comparison between the 2 simulations.
+![moneyplot](https://user-images.githubusercontent.com/100022747/210150049-5b9c254c-a290-4fda-b762-62d4061cb0f0.png)
 
 ### Multi-threading note
 
