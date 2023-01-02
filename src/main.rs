@@ -21,7 +21,7 @@ pub struct Entry {
 
 #[derive(Deserialize)]
 pub struct simulation {
-    method: u8,
+    method: u32,
     runs: u32,
     starting_point: i32,
     probability: Vec<String>,
@@ -43,7 +43,7 @@ mod trial {
     //This programme will require a pure list of probabilities for the listofprobs variable input
     // it is also going to need *s to indicate which levels are secure and insecure
     pub fn runs(
-        method: u8,
+        method: u32,
         lastrun_orig: i32,
         listofprobs: Vec<&str>,
         money_tree: &[f64],
@@ -122,31 +122,51 @@ mod trial {
         countable = 0; //reset countable to just record number of sit down rolls until termination of session
         let mut falsecount: u32 = 0;
         let mut f_star: bool = false;
+        let mut series_true: u8 = 0; //for 100+ method series
+        let over100par: u8 = (method%10) as u8; // for now this means that if the method is above number 100, we can conceivably do even 55 as the number of successes for instance, before we grant a free success. Which is a typically 
+        //trivial thing to code into the machine
         loop {
             //breaking conditions
             if lastrun >= terminate {
                 break;
-            } else if method % 10 == 1 && countable >= number_of_runs {
+            } else if method<100 && method % 10 == 1 && countable >= number_of_runs {
                 break;
-            } else if method % 10 == 2 && falsecount >= number_of_runs {
+            } else if method>100 && method/100 == 1 && countable >= number_of_runs{
                 break;
-            } else if method % 10 == 3 && countable >= number_of_runs && lastrun <= lastrun_orig {
+            }else if method<100 && method % 10 == 2 && falsecount >= number_of_runs {
                 break;
-            } else if method % 10 == 3 && countable >= number_of_runs && lastrun > lastrun_orig {
+            } else if method>100 && method/100 == 2 && falsecount >= number_of_runs{
+                break;
+            }else if method<100 && method % 10 == 3 && countable >= number_of_runs && lastrun <= lastrun_orig {
+                break;
+            } else if method<100 && method % 10 == 3 && countable >= number_of_runs && lastrun > lastrun_orig {
                 if falsecount >= falsecap {
                     break;
                 }
-            }
+            }else if method>100 && method / 100 == 3 && countable >= number_of_runs && lastrun <= lastrun_orig {
+                break;
+            } else if method>100 && method / 100 == 3 && countable >= number_of_runs && lastrun > lastrun_orig {
+                if falsecount >= falsecap {
+                    break;
+                }
+            } 
             //Methods 1-3 use * to denote 'unfallable' stages.
             let ref_lastrun: usize = lastrun.clone() as usize; //turning level parameter into usable index for vector
             money += money_tree[ref_lastrun];
-            if !secondlaststate_in && !laststate_in && method <= 10 {//pity system: fail 2 times in a row, you go up. 
-                //pity system revoked for methods above 10.
+            if !secondlaststate_in && !laststate_in && method%100 < 10 {//pity system: fail 2 times in a row, you go up. 
+                //pity system revoked for methods above 9.
+                //changed method < 10 to method %100 <10 to include user behaviours in "modified pity system automatic rewards" - 100+ series shall reward successive successes with 1 free win, and
+                //100-109 this way should be including pity system where you fail twice leads to one free win
                 laststate_in = true;
                 secondlaststate_in = false;
                 countable += 1;
                 lastrun+=1;
                 f_star=false;
+            }else if method>=100 && series_true==over100par{ //success check system for method 100+
+                series_true=0;//reset counter
+                lastrun+=1; //auto success
+                countable+=1;//counts as a roll as well
+
             } else {
                 secondlaststate_in = laststate_in;
                 laststate_in = trial(listofprobs_f[ref_lastrun]);
@@ -158,14 +178,17 @@ mod trial {
                     if (booms0.contains(&(lastrun as u32))
                         || booms1.contains(&(lastrun as u32))
                         || booms2.contains(&(lastrun as u32)))
-                        == false
+                        == false // given that the succeeded stage is not a boom stage
                     {
                         countable += 1; //This qualifying condition that it is not a success on the boom level is to ensure that we do not even 'count' that as an attempt. countable is merely an optical parameter, while lastrun increases anyway
+                        //I also would now like to record progressive successes in case we are doing 100+ series
+                        series_true+=1;
                     }
                 } else if listoffixables.contains(&(lastrun as u32)) {//failed but on fixed level. ***BUT need to account for fact that we could be falling on here for the first time.
                     lastrun += 0;
                     falsecount += 1;
                     countable += 1;
+                    series_true=0; //you failed so this successive success parameter is set back to 0
                     //At this stage, the last roll laststate_in is a False on teh trial
                     //cheat the system and make sure pity system is not triggered at fixed stage (change second last state to true). Otherwise getting unlucky at fixed spot is exploited
                     //This is only to maintain the specific game scenario that we are depicting so lim to methods 1,2,3
@@ -177,6 +200,7 @@ mod trial {
                     lastrun = 0; //failed on critical stage, fall to first level
                     falsecount += 1;
                     countable += 1;
+                    series_true=0;
                     //when you boom, there is no extra stage bonus from pity system
                     if method < 5 {
                         secondlaststate_in = true;
@@ -185,6 +209,7 @@ mod trial {
                     lastrun = 1; //similar but fall to second stage
                     falsecount += 1;
                     countable += 1;
+                    series_true=0;
                     if method < 5 {
                         secondlaststate_in = true;
                     }
@@ -192,6 +217,7 @@ mod trial {
                     lastrun = 2;//3rd stage fall
                     falsecount += 1;
                     countable += 1;
+                    series_true=0;
                     if method < 5 {
                         secondlaststate_in = true;
                     }
@@ -200,14 +226,17 @@ mod trial {
                     lastrun -= 2;
                     falsecount += 1;
                     countable += 1;
+                    series_true=0;
                 } else if lastrun > 0 {
                     lastrun -= 1;
                     falsecount += 1;
                     countable += 1;
+                    series_true=0;
                 } else {
                     // lastrun += 0;
                     falsecount += 1;
                     countable += 1;
+                    series_true=0;
                     if method < 5 {
                         secondlaststate_in = true;
                     }
@@ -226,7 +255,7 @@ mod trial {
     }
     //Let us create a fresh, simulator programme that we can simply call to run an atomic trial to iterative success! Only 1 trial though. Simulating multiple trials requires looping this!
     pub fn simulate(
-        method: u8,
+        method: u32,
         number_of_runs: u32,
         starting_point: i32,
         listofprobs: Vec<&str>,
@@ -266,7 +295,7 @@ mod trial {
     }
 
     pub fn simulate_doublethread(
-        method: [u8; 2],
+        method: [u32; 2],
         number_of_runs: [u32; 2],
         starting_point: [i32; 2],
         listofprobs: [Vec<&str>; 2],
