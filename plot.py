@@ -88,10 +88,13 @@ else:bins = np.linspace(0, alphaamt,int(alphaamt/5))
 bins = np.array(bins)
 plt.hist([tapdata, tapdata2], bins, alpha=0.5, label=[f'First simulation for {str(attempts1) } attempts per session : Method [{str(method1)}]', f'Second simulation for {str(attempts2) } attempts per session: Method [{str(method2)}]']) 
 rc('font',**{'family':'Yu Gothic', 'size': 16})
-fit_alpha, fit_loc, fit_beta=stats.gamma.fit(tapdata)
-fit_alpha2, fit_loc2, fit_beta2=stats.gamma.fit(tapdata2)
+try:fit_alpha, fit_loc, fit_beta=stats.gamma.fit(tapdata)
+except:pass
+try:fit_alpha2, fit_loc2, fit_beta2=stats.gamma.fit(tapdata2)
+except:pass
 print(f"Kolmogorov Smirnov test result for tapdata : {ks_2samp(tapdata, tapdata2)}")
-plt.text(1,1," "+(str(ks_2samp(tapdata, tapdata2)).split('(')[1].replace(")","").replace(",","\n"))+ "\n\n"+ f"Simulation 1 Gamma Fit for {fit_alpha} shape and {fit_beta} rate \n"+" " + (str(stats.kstest(tapdata, 'gamma', args=(fit_alpha,fit_loc, fit_beta)))) + "\n\n"+ f"Simulation 2 Gamma Fit for {fit_alpha2} shape and {fit_beta2} rate \n"+" " + (str(stats.kstest(tapdata2, 'gamma', args=(fit_alpha2,fit_loc2, fit_beta2)))), style = "italic", bbox={'facecolor': 'black', 'alpha': 0.1, 'pad': 10})
+try:plt.text(1,1," "+(str(ks_2samp(tapdata, tapdata2)).split('(')[1].replace(")","").replace(",","\n"))+ "\n\n"+ f"Simulation 1 Gamma Fit for {fit_alpha} shape and {fit_beta} rate \n"+" " + (str(stats.kstest(tapdata, 'gamma', args=(fit_alpha,fit_loc, fit_beta)))) + "\n\n"+ f"Simulation 2 Gamma Fit for {fit_alpha2} shape and {fit_beta2} rate \n"+" " + (str(stats.kstest(tapdata2, 'gamma', args=(fit_alpha2,fit_loc2, fit_beta2)))), style = "italic", bbox={'facecolor': 'black', 'alpha': 0.1, 'pad': 10})
+except:pass
 plt.xlabel("Number of Bernoulli trials taken to success" , color = 'black')
 plt.ylabel("Frequency", color = 'black')
 plt.gca().set_xscale("log")
@@ -114,9 +117,12 @@ ax = sns.kdeplot(money , bw_adjust = 0.5 , fill = True, cut = 0, label = "Simula
 sns.kdeplot(money2 , bw_adjust = 0.5 , fill = True, cut = 0, label = "Simulation 2 ")
 plt.xlabel("Money (units)", color = 'black')
 plt.ylabel("Frequency", color = 'black')
-fit_alpha, fit_loc, fit_beta=stats.gamma.fit(money)
-fit_alpha2, fit_loc2, fit_beta2=stats.gamma.fit(money2)
-plt.text(0.5*max(max(money),max(money2)),0.0," "+(str(ks_2samp(money, money2)).split('(')[1].replace(")","").replace(",","\n")) + "\n\n"+ f"Simulation 1 Gamma Fit for {fit_alpha} shape and {fit_beta} rate \n"+" " + (str(stats.kstest(money, 'gamma', args=(fit_alpha,fit_loc, fit_beta)))) + "\n\n"+ f"Simulation 2 Gamma Fit for {fit_alpha2} shape and {fit_beta2} rate \n"+" " + (str(stats.kstest(money2, 'gamma', args=(fit_alpha2,fit_loc2, fit_beta2)))), style = "italic", bbox={'facecolor': 'black', 'alpha': 0.1, 'pad': 10})
+try:fit_alpha, fit_loc, fit_beta=stats.gamma.fit(money)
+except:pass
+try:fit_alpha2, fit_loc2, fit_beta2=stats.gamma.fit(money2)
+except:pass
+try:plt.text(0.5*max(max(money),max(money2)),0.0," "+(str(ks_2samp(money, money2)).split('(')[1].replace(")","").replace(",","\n")) + "\n\n"+ f"Simulation 1 Gamma Fit for {fit_alpha} shape and {fit_beta} rate \n"+" " + (str(stats.kstest(money, 'gamma', args=(fit_alpha,fit_loc, fit_beta)))) + "\n\n"+ f"Simulation 2 Gamma Fit for {fit_alpha2} shape and {fit_beta2} rate \n"+" " + (str(stats.kstest(money2, 'gamma', args=(fit_alpha2,fit_loc2, fit_beta2)))), style = "italic", bbox={'facecolor': 'black', 'alpha': 0.1, 'pad': 10})
+except:pass
 # plt.text(0.1,0.0003,  , bbox={'facecolor': 'black', 'alpha': 0.1, 'pad': 10})
 # plt.gca().set_xscale("log")
 plt.title(f"Cost distribution of 2 simulations", color = 'black')
