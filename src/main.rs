@@ -123,15 +123,19 @@ mod trial {
         let mut falsecount: u32 = 0;
         let mut f_star: bool = false;
         let mut series_true: u8 = 0; //for 100+ method series
-        let over100par: u8 = (method%10) as u8; // for now this means that if the method is above number 100, we can conceivably do even 55 as the number of successes for instance, before we grant a free success. Which is a typically 
-        //trivial thing to code into the machine
+        let mut falsecount_is_on: bool = true; //for method 3 class
+        let over100par: u8 = (method%10) as u8; //last digit for 100+ series now instead denotes number of successive successes required to get free win
         loop {
+            //Special condition for method 3 class
+            if (method>100 && method/100==3) || (method<100 && method%10==3){
+                falsecount_is_on = false;
+            }            
             //breaking conditions
             if lastrun >= terminate {
                 break;
             } else if method<100 && method % 10 == 1 && countable >= number_of_runs {
                 break;
-            } else if method>100 && method/100 == 1 && countable >= number_of_runs{
+            } else if method>=100 && method/100 == 1 && countable >= number_of_runs{
                 break;
             }else if method<100 && method % 10 == 2 && falsecount >= number_of_runs {
                 break;
@@ -140,12 +144,14 @@ mod trial {
             }else if method<100 && method % 10 == 3 && countable >= number_of_runs && lastrun <= lastrun_orig {
                 break;
             } else if method<100 && method % 10 == 3 && countable >= number_of_runs && lastrun > lastrun_orig {
+                falsecount_is_on=true;
                 if falsecount >= falsecap {
                     break;
                 }
             }else if method>100 && method / 100 == 3 && countable >= number_of_runs && lastrun <= lastrun_orig {
                 break;
             } else if method>100 && method / 100 == 3 && countable >= number_of_runs && lastrun > lastrun_orig {
+                falsecount_is_on=true;
                 if falsecount >= falsecap {
                     break;
                 }
@@ -186,7 +192,7 @@ mod trial {
                     }
                 } else if listoffixables.contains(&(lastrun as u32)) {//failed but on fixed level. ***BUT need to account for fact that we could be falling on here for the first time.
                     lastrun += 0;
-                    falsecount += 1;
+                    if falsecount_is_on{falsecount += 1;}
                     countable += 1;
                     series_true=0; //you failed so this successive success parameter is set back to 0
                     //At this stage, the last roll laststate_in is a False on teh trial
@@ -198,7 +204,7 @@ mod trial {
                     f_star = true; // "we have failed on a fixed level in the last run" -> only reset if you succeed
                 } else if booms0.contains(&(lastrun as u32)) {
                     lastrun = 0; //failed on critical stage, fall to first level
-                    falsecount += 1;
+                    if falsecount_is_on{falsecount += 1;}
                     countable += 1;
                     series_true=0;
                     //when you boom, there is no extra stage bonus from pity system
@@ -207,7 +213,7 @@ mod trial {
                     }
                 } else if booms1.contains(&(lastrun as u32)) {
                     lastrun = 1; //similar but fall to second stage
-                    falsecount += 1;
+                    if falsecount_is_on{falsecount += 1;}
                     countable += 1;
                     series_true=0;
                     if method < 5 {
@@ -215,7 +221,7 @@ mod trial {
                     }
                 } else if booms2.contains(&(lastrun as u32)) {
                     lastrun = 2;//3rd stage fall
-                    falsecount += 1;
+                    if falsecount_is_on{falsecount += 1;}
                     countable += 1;
                     series_true=0;
                     if method < 5 {
@@ -224,17 +230,17 @@ mod trial {
                 } else if boomclap.contains(&(lastrun as u32)) {
                     //to compensate for the fact that we are using 2 stages in a compound manner to represent a trial with 3 outcomes instead of
                     lastrun -= 2;
-                    falsecount += 1;
+                    if falsecount_is_on{falsecount += 1;}
                     countable += 1;
                     series_true=0;
                 } else if lastrun > 0 {
                     lastrun -= 1;
-                    falsecount += 1;
+                    if falsecount_is_on{falsecount += 1;}
                     countable += 1;
                     series_true=0;
                 } else {
                     // lastrun += 0;
-                    falsecount += 1;
+                    if falsecount_is_on{falsecount += 1;}
                     countable += 1;
                     series_true=0;
                     if method < 5 {
