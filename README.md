@@ -16,6 +16,10 @@ Methods represent a mixture of user behaviour and trial features.
 
 However, methods 1-4 do not permit the pity system to trigger at * levels.  A repeated failure at the fixed levels is not qualifiable for a pity win afterwards for the methods!  The trials at which the user has failed must be distinct.
 
+(NEW!) Methods 100+: Methods that simulate a positive reinforcement system in place or in tandem with a pity system (look at rubric below for more details). A
+reinforcement system is one whereby a consecutive set of successes is congratulated with an automatic win in the next trial. An interesting consideration worth
+noting in trial design/rng design etc. What is more potent in driving or hindering success - the pity system or the reinforcement system?
+
 ### Method Rubric
 
 %1: represents the user attempting a fixed number of attempts to stop and restart attempts from where they left off.
