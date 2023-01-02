@@ -83,3 +83,14 @@ For the brave ones who made it this far, not that this is anything revolutionary
 
 Rust appears to at least be 1.6 times faster than Python in executing the simulations.  This timing dataset was for only 1 simulation at a time without any multi-threading on either side.
 
+
+
+## **Consideration
+
+Considering adding new set of methods 20-39 that would, instead of innately providing a pity system whereby the user gets a free win in the current trial given that the previous distinct 2 have been failed at. 
+
+* What if we instead(20-29) or in addition(30-39) rewarded successive successes?
+* What if we adjusted the number of trials that trigger this free win?
+* What if we adjusted the original pity system to be adjustable as well? For instance, instead of 2 distinct failures, consider 3 successive failures?
+
+
