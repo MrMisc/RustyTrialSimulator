@@ -22,6 +22,8 @@ noting in trial design/rng design etc. What is more potent in driving or hinderi
 
 ### Method Rubric
 
+The starting logic for methods was initially as below...
+
 %1: represents the user attempting a fixed number of attempts to stop and restart attempts from where they left off.
 
 %2: represents a failure-averse method where the seed/user quits upon a specified number of failures achieved.
@@ -29,6 +31,27 @@ noting in trial design/rng design etc. What is more potent in driving or hinderi
 %3: a hybrid of the 2.  Once %1 fails, a %2 is activated.
 
 %4-%0: No current method.
+
+#### Quick calibrations | using methods
+
+The above is not invalidated to a significant extent, however, there is some underlying logic that is left not quite explained and/or explored in this method rubric. The less concerned user, should at the very least, note that within the methods 1-4, there is an underlying pity mechanism that is built into the simulator for these particular methods. The pity system activates a free 100% run on the current trial given that the user has previously failed 2 consecutive times. To avoid it, simply use methods 11-14 for the equivalent, without any pity system.
+
+#### Additional Details
+
+For the more curious user, here are some further details. As a preface, remember that by default, every level given by the user as a probability vector and price vector, is set to cause each simulation/seed to fall down to the previous trial level a level upon failure.
+
+Firstly, the pity system does in fact trigger upon 2 consecutive failures. This, however, triggers only if the trials are unique. Hence, nothing happens if you fail on the same level twice. When does that happen - when falling below the trial level is impossible.  This in turn happens due to 2 reasons: you are at the first level, OR you have annotated a fixed level somewhere within the probability vector aside from the first level. This, is done by annotating the probability value for that trial level, with a * (eg 0.3,0.3,0.3*,0.3,0.3*).
+
+Secondly, the pity system by default is set to such that it DOES NOT trigger at the fixed levels if you have failed twice at that level. However, the option to do so is available for any methods that are greater than or equal to 5 (for methods below 100). For methods above 100, take note that we have also allowed for this to occur at %100 < 5. In other words, 100-104, 200-204 etc.
+
+In addition to this, the option to REMOVE the pity system is available by simply making sure that %100>=10. Hence, methods 10-99, 110-199, 210-299 etc are methods that are not using the pity system. Failing 2 times in a row in any scenario with these methods inputted into the trial simulator will NOT trigger any pity system.
+
+Finally, as we have begun mentioning them, there are now methods that are above 100 (the 100+ series). Initially, by design, methods past 15 were redundant. However, in the interest of examining **reinforcement** systems, we added them in. Essentially, methods above 100, reward the seed for succeeding a consecutive number of times. The number of times is decided by the ones digit of the method number (as long as it is >100) i.e. method_number%10 = N. Hence, this goes up to 9.
+
+One may ask, does this replace the user behaviour initially coded for methods 1-3,11-13 for methods above 100? In fact, no! We have simply moved that logic to be denoted by the whole number division by 100. Hence, now method 102 for instance, denotes user behaviour reminiscent of method 1, WITH a pity system, AND a reinforcement system whereby the seed gets a free trial success after having completed 2 trial success in succession. The logic is as follows below...
+
+
+
 | Primary<br>method | User behaviour                                                                                                                                                                                                                                                                                                                  | Pity system (2 fails)                                 | Reinforcement System (N successes)                                                                                                           | Explicit Conditions                                                                                                                                                                                                                         | Method Numbers<br> (user input)            |
 |-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|
 | 1                 | Multiple attempts per seed to finish<br><br>Terminate each attempt at fixed number of attempts                                                                                                                                                                                                                                  | Yes<br><br>Does NOT apply at (*)<br>fixed boundaries  | No                                                                                                                                           | method_number%10 = 1<br><br>method_number<100<br><br>Method number must be<br>below 100 and have 1<br>in the ones place                                                                                                                     | 1                                          |
