@@ -27,7 +27,14 @@ However, methods 1-4 do not permit the pity system to trigger at * levels.  A re
 %4-%0: No current method.
 
 
-
+$$
+\hat y
+= 
+\begin{cases}
+0 \text{ if } \hat p < 0.5\\
+1 \text{ if } \hat p \geqslant 0.5
+\end{cases}
+$$
 
 
 This trial simulator was initially constructed entirely on Python, with some bugs.  Instead of perpetually fixing the model in a set of code that takes forever to process relatively large sample sizes, it was prudent to construct the code in a low-level language instead.  This enabled us to quickly pick out more bugs than possible with the initially lengthy execution times.  
