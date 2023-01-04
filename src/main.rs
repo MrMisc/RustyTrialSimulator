@@ -198,7 +198,7 @@ mod trial {
                     //At this stage, the last roll laststate_in is a False on teh trial
                     //cheat the system and make sure pity system is not triggered at fixed stage (change second last state to true). Otherwise getting unlucky at fixed spot is exploited
                     //This is only to maintain the specific game scenario that we are depicting so lim to methods 1,2,3
-                    if ((method <5 && method < 100) || (method%100<5 && method >= 100)) && f_star{ //acounting for whether this is the first time we have touched this fixed level or not here is here
+                    if ((method <5 && method < 100) || method>=100) && f_star{ //acounting for whether this is the first time we have touched this fixed level or not here is here
                         secondlaststate_in = true; //change second last roll log to true, to guard against a potential double fail pity system being triggered by failure at the 
                     }
                     f_star = true; // "we have failed on a fixed level in the last run" -> only reset if you succeed
@@ -208,7 +208,7 @@ mod trial {
                     countable += 1;
                     series_true=0;
                     //when you boom, there is no extra stage bonus from pity system
-                    if (method <5 && method < 100) || (method%100<5 && method >= 100) {
+                    if (method <5 && method < 100) || method>=100 {
                         secondlaststate_in = true;
                     }
                 } else if booms1.contains(&(lastrun as u32)) {
@@ -216,7 +216,7 @@ mod trial {
                     if falsecount_is_on{falsecount += 1;}
                     countable += 1;
                     series_true=0;
-                    if (method <5 && method < 100) || (method%100<5 && method >= 100) {
+                    if (method <5 && method < 100) || method>=100 {
                         secondlaststate_in = true;
                     }
                 } else if booms2.contains(&(lastrun as u32)) {
@@ -224,7 +224,7 @@ mod trial {
                     if falsecount_is_on{falsecount += 1;}
                     countable += 1;
                     series_true=0;
-                    if (method <5 && method < 100) || (method%100<5 && method >= 100) {
+                    if (method <5 && method < 100) || method>=100 {
                         secondlaststate_in = true;
                     }
                 } else if boomclap.contains(&(lastrun as u32)) {
@@ -243,7 +243,7 @@ mod trial {
                     if falsecount_is_on{falsecount += 1;}
                     countable += 1;
                     series_true=0;
-                    if (method <5 && method < 100) || (method%100<5 && method >= 100) {
+                    if (method <5 && method < 100) || method>=100 {
                         secondlaststate_in = true;
                     }
                 }
