@@ -8,6 +8,8 @@ By default, this system implies a system whereby failure at a trial, excluding t
 
 The user also asks for a money scheme for each trial in particular.
 
+More information on the additional functionalities for this programme are available @ https://github.com/MrMisc/Rust-Modern-Trial-Simulator as well.
+
 ## Methods | Brief description
 
 Methods represent a mixture of user behaviour and trial features. 
